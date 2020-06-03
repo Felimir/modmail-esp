@@ -206,7 +206,7 @@ class EmbedPaginatorSession(PaginatorSession):
 
         if len(self.pages) > 1:
             for i, embed in enumerate(self.pages):
-                footer_text = f"Page {i + 1} of {len(self.pages)}"
+                footer_text = f"Página {i + 1} de {len(self.pages)}"
                 if embed.footer.text:
                     footer_text = footer_text + " • " + embed.footer.text
                 embed.set_footer(text=footer_text, icon_url=embed.footer.icon_url)
@@ -238,7 +238,7 @@ class MessagePaginatorSession(PaginatorSession):
 
     def _set_footer(self):
         if self.embed is not None:
-            footer_text = f"Page {self.current+1} of {len(self.pages)}"
+            footer_text = f"Página {self.current+1} de {len(self.pages)}"
             if self.footer_text:
                 footer_text = footer_text + " • " + self.footer_text
             self.embed.set_footer(text=footer_text, icon_url=self.embed.footer.icon_url)

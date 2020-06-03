@@ -96,16 +96,16 @@ class Thread:
                 name=format_channel_name(recipient, self.bot.modmail_guild),
                 category=category,
                 overwrites=overwrites,
-                reason="Creating a thread channel.",
+                reason="Creación de un ticket.",
             )
         except discord.HTTPException as e:  # Failed to create due to missing perms.
             logger.critical("An error occurred while creating a thread.", exc_info=True)
             self.manager.cache.pop(self.id)
 
             embed = discord.Embed(color=self.bot.error_color)
-            embed.title = "Error while trying to create a thread."
+            embed.title = "Error cuando se intentó crear un ticket."
             embed.description = str(e)
-            embed.add_field(name="Recipient", value=recipient.mention)
+            embed.add_field(name="Receptor", value=recipient.mention)
 
             if self.bot.log_channel is not None:
                 await self.bot.log_channel.send(embed=embed)
@@ -125,7 +125,7 @@ class Thread:
             log_url = log_count = None
             # ensure core functionality still works
 
-        await channel.edit(topic=f"User ID: {recipient.id}")
+        await channel.edit(topic=f"ID del usuario: {recipient.id}")
         self.ready = True
 
         if creator:
@@ -208,41 +208,41 @@ class Thread:
 
         created = str((time - user.created_at).days)
         embed = discord.Embed(
-            color=color, description=f"{user.mention} was created {days(created)}", timestamp=time
+            color=color, description=f"{user.mention} creó su cuenta {days(created)} días atrás", timestamp=time
         )
 
         # if not role_names:
         #     embed.add_field(name='Mention', value=user.mention)
         # embed.add_field(name='Registered', value=created + days(created))
 
-        footer = "User ID: " + str(user.id)
+        footer = "ID del usuario: " + str(user.id)
         embed.set_author(name=str(user), icon_url=user.avatar_url, url=log_url)
         # embed.set_thumbnail(url=avi)
 
         if member is not None:
             joined = str((time - member.joined_at).days)
             # embed.add_field(name='Joined', value=joined + days(joined))
-            embed.description += f", joined {days(joined)}"
+            embed.description += f", entró {days(joined)} días atraś"
 
             if member.nick:
-                embed.add_field(name="Nickname", value=member.nick, inline=True)
+                embed.add_field(name="Apodo", value=member.nick, inline=True)
             if role_names:
                 embed.add_field(name="Roles", value=role_names, inline=True)
             embed.set_footer(text=footer)
         else:
-            embed.set_footer(text=f"{footer} • (not in main server)")
+            embed.set_footer(text=f"{footer} • (no está en el servidor principal)")
 
         if log_count is not None:
             # embed.add_field(name="Past logs", value=f"{log_count}")
-            thread = "thread" if log_count == 1 else "threads"
-            embed.description += f" with **{log_count or 'no'}** past {thread}."
+            thread = "ticket" if log_count == 1 else "tickets"
+            embed.description += f" con **{log_count or 'no tiene'}** {thread} pasado(s)."
         else:
             embed.description += "."
 
         mutual_guilds = [g for g in self.bot.guilds if user in g.members]
         if member is None or len(mutual_guilds) > 1:
             embed.add_field(
-                name="Mutual Server(s)", value=", ".join(g.name for g in mutual_guilds)
+                name="Servidor(es) compartido(s)", value=", ".join(g.name for g in mutual_guilds)
             )
 
         return embed
