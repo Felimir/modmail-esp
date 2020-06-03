@@ -353,15 +353,15 @@ class Thread:
             user = f"`{self.id}`"
 
         if self.id == closer.id:
-            _closer = "the Recipient"
+            _closer = "el receptor"
         else:
             _closer = f"{closer} ({closer.id})"
 
         embed.title = user
 
-        event = "Thread Closed as Scheduled" if scheduled else "Thread Closed"
+        event = "Ticket cerrado programado" if scheduled else "Ticket cerrado"
         # embed.set_author(name=f"Event: {event}", url=log_url)
-        embed.set_footer(text=f"{event} by {_closer}")
+        embed.set_footer(text=f"{event} por {_closer}")
         embed.timestamp = datetime.utcnow()
 
         tasks = [self.bot.config.update()]
@@ -593,7 +593,7 @@ class Thread:
             logger.warning("Failed to edit message.", exc_info=True)
             raise
         embed = linked_message.embeds[0]
-        embed.add_field(name="**Edited, former message:**", value=embed.description)
+        embed.add_field(name="**Editado, nuevo mensaje:**", value=embed.description)
         embed.description = content
         await asyncio.gather(
             self.bot.api.edit_message(message.id, content), linked_message.edit(embed=embed)
@@ -620,8 +620,8 @@ class Thread:
             return await message.channel.send(
                 embed=discord.Embed(
                     color=self.bot.error_color,
-                    description="Your message could not be delivered since "
-                    "the recipient shares no servers with the bot.",
+                    description="El mensaje no pudo ser emitido ya que "
+                    "el receptor no comparte servidores con el BOT",
                 )
             )
 
@@ -637,10 +637,10 @@ class Thread:
                 message.channel.send(
                     embed=discord.Embed(
                         color=self.bot.error_color,
-                        description="Your message could not be delivered as "
-                        "the recipient is only accepting direct "
-                        "messages from friends, or the bot was "
-                        "blocked by the recipient.",
+                        description="El mensaje no pudo ser emitido porque "
+                        "el receptor solo está aceptando "
+                        "mensajes de amigos, o el BOT fue "
+                        "bloqueado por el receptor.",
                     )
                 )
             )
@@ -666,7 +666,7 @@ class Thread:
                     self.channel.send(
                         embed=discord.Embed(
                             color=self.bot.error_color,
-                            description="Scheduled close has been cancelled.",
+                            description="Cierre programado cancelado.",
                         )
                     )
                 )
@@ -695,7 +695,7 @@ class Thread:
                 self.channel.send(
                     embed=discord.Embed(
                         color=self.bot.error_color,
-                        description="Scheduled close has been cancelled.",
+                        description="Cierre programado cancelado.",
                     )
                 )
             )
@@ -777,7 +777,7 @@ class Thread:
             if not prioritize_uploads or (is_image_url(url) and not embedded_image and filename):
                 embed.set_image(url=url)
                 if filename:
-                    embed.add_field(name="Image", value=f"[{filename}]({url})")
+                    embed.add_field(name="Imagen", value=f"[{filename}]({url})")
                 embedded_image = True
             elif filename is not None:
                 if note:
@@ -791,7 +791,7 @@ class Thread:
                 img_embed.set_image(url=url)
                 img_embed.title = filename
                 img_embed.url = url
-                img_embed.set_footer(text=f"Additional Image Upload ({additional_count})")
+                img_embed.set_footer(text=f"Subida de imágenes adicional ({additional_count})")
                 img_embed.timestamp = message.created_at
                 additional_images.append(destination.send(embed=img_embed))
                 additional_count += 1
@@ -808,7 +808,7 @@ class Thread:
             embed.colour = self.bot.mod_color
             # Anonymous reply sent in thread channel
             if anonymous and isinstance(destination, discord.TextChannel):
-                embed.set_footer(text="Anonymous Reply")
+                embed.set_footer(text="Respuesta anónima")
             # Normal messages
             elif not anonymous:
                 mod_tag = self.bot.config["mod_tag"]
@@ -820,7 +820,7 @@ class Thread:
         elif note:
             embed.colour = self.bot.main_color
         else:
-            embed.set_footer(text=f"Message ID: {message.id}")
+            embed.set_footer(text=f"ID del mensaje: {message.id}")
             embed.colour = self.bot.recipient_color
 
         if from_mod or note:
@@ -904,7 +904,7 @@ class ThreadManager:
                 )
                 if thread is not None:
                     logger.debug("Found thread with tempered ID.")
-                    await channel.edit(topic=f"User ID: {user_id}")
+                    await channel.edit(topic=f"ID del usuario: {user_id}")
             return thread
 
         if recipient:
