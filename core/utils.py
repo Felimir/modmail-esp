@@ -64,7 +64,7 @@ class User(commands.IDConverter):
             pass
         match = self._get_id_match(argument)
         if match is None:
-            raise commands.BadArgument('User "{}" not found'.format(argument))
+            raise commands.BadArgument('Usuario "{}" no encontrado'.format(argument))
         return discord.Object(int(match.group(1)))
 
 
@@ -114,7 +114,7 @@ def format_preview(messages: typing.List[typing.Dict[str, typing.Any]]):
         prefix = "[M]" if author["mod"] else "[R]"
         out += truncate(f"`{prefix} {name}:` {content}", max=75) + "\n"
 
-    return out or "No Messages"
+    return out or "Sin mensajes"
 
 
 def is_image_url(url: str) -> bool:
@@ -159,7 +159,7 @@ def parse_image_url(url: str) -> str:
 def human_join(strings):
     if len(strings) <= 2:
         return " or ".join(strings)
-    return ", ".join(strings[: len(strings) - 1]) + " or " + strings[-1]
+    return ", ".join(strings[: len(strings) - 1]) + " o " + strings[-1]
 
 
 def days(day: typing.Union[str, int]) -> str:
@@ -178,8 +178,8 @@ def days(day: typing.Union[str, int]) -> str:
     """
     day = int(day)
     if day == 0:
-        return "**today**"
-    return f"{day} day ago" if day == 1 else f"{day} days ago"
+        return "**hoy**"
+    return f"{day} día atras" if day == 1 else f"{day} días atrás"
 
 
 def cleanup_code(content: str) -> str:
@@ -204,7 +204,7 @@ def cleanup_code(content: str) -> str:
     return content.strip("` \n")
 
 
-TOPIC_REGEX = re.compile(r"\bUser ID:\s*(\d{17,21})\b", flags=re.IGNORECASE)
+TOPIC_REGEX = re.compile(r"\bID del usuario:\s*(\d{17,21})\b", flags=re.IGNORECASE)
 
 
 def match_user_id(text: str) -> int:
@@ -230,11 +230,11 @@ def match_user_id(text: str) -> int:
 def create_not_found_embed(word, possibilities, name, n=2, cutoff=0.6) -> discord.Embed:
     # Single reference of Color.red()
     embed = discord.Embed(
-        color=discord.Color.red(), description=f"**{name.capitalize()} `{word}` cannot be found.**"
+        color=discord.Color.red(), description=f"**{name.capitalize()} `{word}` no fue encontrado.**"
     )
     val = get_close_matches(word, possibilities, n=n, cutoff=cutoff)
     if val:
-        embed.description += "\nHowever, perhaps you meant...\n" + "\n".join(val)
+        embed.description += "\nSin embargo, quizá quisiste decir...\n" + "\n".join(val)
     return embed
 
 

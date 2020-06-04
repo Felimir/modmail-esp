@@ -41,17 +41,17 @@ class Modmail(commands.Cog):
 
         if ctx.guild != self.bot.modmail_guild:
             return await ctx.send(
-                f"You can only setup in the Modmail guild: {self.bot.modmail_guild}."
+                f"Solo puedes configurar el Sistema en el servidor principal: {self.bot.modmail_guild}."
             )
 
         if self.bot.main_category is not None:
             logger.debug("Can't re-setup server, main_category is found.")
-            return await ctx.send(f"{self.bot.modmail_guild} is already set up.")
+            return await ctx.send(f"{self.bot.modmail_guild} ya está configurado.")
 
         if self.bot.modmail_guild is None:
             embed = discord.Embed(
                 title="Error",
-                description="Modmail functioning guild not found.",
+                description="Servidor de funcionamiento del Sistema no encontrado.",
                 color=self.bot.error_color,
             )
             return await ctx.send(embed=embed)
@@ -88,9 +88,9 @@ class Modmail(commands.Cog):
         )
 
         embed = discord.Embed(
-            title="Friendly Reminder",
-            description=f"You may use the `{self.bot.prefix}config set log_channel_id "
-            "<channel-id>` command to set up a custom log channel, then you can delete this default "
+            title="Recordatorio",
+            description=f"Puedes usar el comando `{self.bot.prefix}config set log_channel_id "
+            "<id-canal>` para establecer , then you can delete this default "
             f"{log_channel.mention} log channel.",
             color=self.bot.main_color,
         )
@@ -102,7 +102,7 @@ class Modmail(commands.Cog):
             "feeling extra generous, buy us coffee on [Patreon](https://patreon.com/kyber) :heart:!",
         )
 
-        embed.set_footer(text=f'Type "{self.bot.prefix}help" for a complete list of commands.')
+        embed.set_footer(text=f'Ejecuta "{self.bot.prefix}help" para una lista completa de comandos.')
         await log_channel.send(embed=embed)
 
         self.bot.config["main_category_id"] = category.id
