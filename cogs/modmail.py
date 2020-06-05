@@ -90,17 +90,17 @@ class Modmail(commands.Cog):
         embed = discord.Embed(
             title="Recordatorio",
             description=f"Puedes usar el comando `{self.bot.prefix}config set log_channel_id "
-            "<id-canal>` para establecer , then you can delete this default "
-            f"{log_channel.mention} log channel.",
+            "<id-canal>` para establecer un canal de registros, luego puedes eliminar este canal creado por defecto ("
+            f"{log_channel.mention}).",
             color=self.bot.main_color,
         )
 
-        embed.add_field(
+       """ embed.add_field(
             name="Thanks for using our bot!",
             value="If you like what you see, consider giving the "
             "[repo a star](https://github.com/kyb3r/modmail) :star: and if you are "
             "feeling extra generous, buy us coffee on [Patreon](https://patreon.com/kyber) :heart:!",
-        )
+        )"""
 
         embed.set_footer(text=f'Ejecuta "{self.bot.prefix}help" para una lista completa de comandos.')
         await log_channel.send(embed=embed)
@@ -110,12 +110,12 @@ class Modmail(commands.Cog):
 
         await self.bot.config.update()
         await ctx.send(
-            "**Successfully set up server.**\n"
-            "Consider setting permission levels to give access to roles "
-            "or users the ability to use Modmail.\n\n"
-            f"Type:\n- `{self.bot.prefix}permissions` and `{self.bot.prefix}permissions add` "
-            "for more info on setting permissions.\n"
-            f"- `{self.bot.prefix}config help` for a list of available customizations."
+            "**Servidor configurado correctamente.**\n"
+            "Considera configurar niveles de permisos para dar acceso a roles "
+            "o usuarios la habilidad de usar el Sistema.\n\n"
+            f"Ejecuta:\n- `{self.bot.prefix}permissions` y `{self.bot.prefix}permissions add` "
+            "para más información en la configuración de permisos.\n"
+            f"- `{self.bot.prefix}config help` para una lista de configuraciones disponibles."
         )
 
         if not self.bot.config["command_permissions"] and not self.bot.config["level_permissions"]:
@@ -150,19 +150,19 @@ class Modmail(commands.Cog):
         if name is not None:
             val = self.bot.snippets.get(name)
             if val is None:
-                embed = create_not_found_embed(name, self.bot.snippets.keys(), "Snippet")
+                embed = create_not_found_embed(name, self.bot.snippets.keys(), "Mensajes predefinidos")
             else:
                 embed = discord.Embed(
-                    title=f'Snippet - "{name}":', description=val, color=self.bot.main_color
+                    title=f'Mensaje predefinido - "{name}":', description=val, color=self.bot.main_color
                 )
             return await ctx.send(embed=embed)
 
         if not self.bot.snippets:
             embed = discord.Embed(
-                color=self.bot.error_color, description="You dont have any snippets at the moment."
+                color=self.bot.error_color, description="No hay mensajes predefinidos por el momento."
             )
-            embed.set_footer(text=f'Check "{self.bot.prefix}help snippet add" to add a snippet.')
-            embed.set_author(name="Snippets", icon_url=ctx.guild.icon_url)
+            embed.set_footer(text=f'Ejecuta "{self.bot.prefix}help snippet add" para añadir un mensaje predefinido.')
+            embed.set_author(name="Mensajes predefinidos", icon_url=ctx.guild.icon_url)
             return await ctx.send(embed=embed)
 
         embeds = []
@@ -170,7 +170,7 @@ class Modmail(commands.Cog):
         for i, names in enumerate(zip_longest(*(iter(sorted(self.bot.snippets)),) * 15)):
             description = format_description(i, names)
             embed = discord.Embed(color=self.bot.main_color, description=description)
-            embed.set_author(name="Snippets", icon_url=ctx.guild.icon_url)
+            embed.set_author(name="Mensajes predefinidos", icon_url=ctx.guild.icon_url)
             embeds.append(embed)
 
         session = EmbedPaginatorSession(ctx, *embeds)
@@ -184,11 +184,11 @@ class Modmail(commands.Cog):
         """
         val = self.bot.snippets.get(name)
         if val is None:
-            embed = create_not_found_embed(name, self.bot.snippets.keys(), "Snippet")
+            embed = create_not_found_embed(name, self.bot.snippets.keys(), "Mensajes predefinidos")
         else:
             val = truncate(escape_code_block(val), 2048 - 7)
             embed = discord.Embed(
-                title=f'Raw snippet - "{name}":',
+                title=f'Mensaje predefinido (crudo) - "{name}":',
                 description=f"```\n{val}```",
                 color=self.bot.main_color,
             )
@@ -214,7 +214,7 @@ class Modmail(commands.Cog):
             embed = discord.Embed(
                 title="Error",
                 color=self.bot.error_color,
-                description=f"Snippet `{name}` already exists.",
+                description=f"El mensaje predefinido `{name}` ya existe.",
             )
             return await ctx.send(embed=embed)
 
@@ -222,7 +222,7 @@ class Modmail(commands.Cog):
             embed = discord.Embed(
                 title="Error",
                 color=self.bot.error_color,
-                description=f"An alias that shares the same name exists: `{name}`.",
+                description=f"Un alias que comparte el mismo nombre existe: `{name}`.",
             )
             return await ctx.send(embed=embed)
 
@@ -230,7 +230,7 @@ class Modmail(commands.Cog):
             embed = discord.Embed(
                 title="Error",
                 color=self.bot.error_color,
-                description="Snippet names cannot be longer than 120 characters.",
+                description="El nombre de los mensajes predefinidos no puede superar los `120` caracteres",
             )
             return await ctx.send(embed=embed)
 
@@ -238,9 +238,9 @@ class Modmail(commands.Cog):
         await self.bot.config.update()
 
         embed = discord.Embed(
-            title="Added snippet",
+            title="Mensaje predefinido añadido",
             color=self.bot.main_color,
-            description="Successfully created snippet.",
+            description="Mensaje predefinido creado correctamente.",
         )
         return await ctx.send(embed=embed)
 
@@ -251,14 +251,14 @@ class Modmail(commands.Cog):
 
         if name in self.bot.snippets:
             embed = discord.Embed(
-                title="Removed snippet",
+                title="Mensaje predefinido removido",
                 color=self.bot.main_color,
-                description=f"Snippet `{name}` is now deleted.",
+                description=f"El mensaje predefinido `{name}` fue eliminado.",
             )
             self.bot.snippets.pop(name)
             await self.bot.config.update()
         else:
-            embed = create_not_found_embed(name, self.bot.snippets.keys(), "Snippet")
+            embed = create_not_found_embed(name, self.bot.snippets.keys(), "Mensajes predefinidos")
         await ctx.send(embed=embed)
 
     @snippet.command(name="edit")
@@ -276,12 +276,12 @@ class Modmail(commands.Cog):
             await self.bot.config.update()
 
             embed = discord.Embed(
-                title="Edited snippet",
+                title="Mensaje predefinido editado",
                 color=self.bot.main_color,
-                description=f'`{name}` will now send "{value}".',
+                description=f'`{name}` ahora enviará "{value}".',
             )
         else:
-            embed = create_not_found_embed(name, self.bot.snippets.keys(), "Snippet")
+            embed = create_not_found_embed(name, self.bot.snippets.keys(), "Mensajes predefinidos")
         await ctx.send(embed=embed)
 
     @commands.command()
@@ -305,7 +305,7 @@ class Modmail(commands.Cog):
 
         if self.bot.config["thread_move_notify"] and not silent:
             embed = discord.Embed(
-                title="Thread Moved",
+                title="Ticket movido",
                 description=self.bot.config["thread_move_response"],
                 color=self.bot.main_color,
             )
@@ -317,18 +317,18 @@ class Modmail(commands.Cog):
     async def send_scheduled_close_message(self, ctx, after, silent=False):
         human_delta = human_timedelta(after.dt)
 
-        silent = "*silently* " if silent else ""
+        silent = "*silenciosamente* " if silent else ""
 
         embed = discord.Embed(
-            title="Scheduled close",
-            description=f"This thread will close {silent}in {human_delta}.",
+            title="Cierre programado",
+            description=f"Este ticket será cerrado {silent}en {human_delta}.",
             color=self.bot.error_color,
         )
 
         if after.arg and not silent:
-            embed.add_field(name="Message", value=after.arg)
+            embed.add_field(name="Mensaje", value=after.arg)
 
-        embed.set_footer(text="Closing will be cancelled if a thread message is sent.")
+        embed.set_footer(text="El cierre será cancelado si un mensaje es recibido.")
         embed.timestamp = after.dt
 
         await ctx.send(embed=embed)
@@ -370,12 +370,12 @@ class Modmail(commands.Cog):
             if thread.close_task is not None or thread.auto_close_task is not None:
                 await thread.cancel_closure(all=True)
                 embed = discord.Embed(
-                    color=self.bot.error_color, description="Scheduled close has been cancelled."
+                    color=self.bot.error_color, description="El cierre programado fue cancelado"
                 )
             else:
                 embed = discord.Embed(
                     color=self.bot.error_color,
-                    description="This thread has not already been scheduled to close.",
+                    description="Este ticket no tiene un cierre programado.",
                 )
 
             return await ctx.send(embed=embed)
@@ -413,7 +413,7 @@ class Modmail(commands.Cog):
         """
         mention = self.parse_user_or_role(ctx, user_or_role)
         if mention is None:
-            raise commands.BadArgument(f"{user_or_role} is not a valid user or role.")
+            raise commands.BadArgument(f"{user_or_role} no es un usuario o rol válido.")
 
         thread = ctx.thread
 
@@ -425,14 +425,14 @@ class Modmail(commands.Cog):
         if mention in mentions:
             embed = discord.Embed(
                 color=self.bot.error_color,
-                description=f"{mention} is already going to be mentioned.",
+                description=f"{mention} ya será mencionado en el siguiente mensaje.",
             )
         else:
             mentions.append(mention)
             await self.bot.config.update()
             embed = discord.Embed(
                 color=self.bot.main_color,
-                description=f"{mention} will be mentioned on the next message received.",
+                description=f"{mention} será mencionado en el próximo mensaje que se reciba.",
             )
         return await ctx.send(embed=embed)
 
@@ -463,13 +463,13 @@ class Modmail(commands.Cog):
         if mention not in mentions:
             embed = discord.Embed(
                 color=self.bot.error_color,
-                description=f"{mention} does not have a pending notification.",
+                description=f"{mention} no tiene una notificación pendiente.",
             )
         else:
             mentions.remove(mention)
             await self.bot.config.update()
             embed = discord.Embed(
-                color=self.bot.main_color, description=f"{mention} will no longer be notified."
+                color=self.bot.main_color, description=f"{mention} ahora no será notificado."
             )
         return await ctx.send(embed=embed)
 
@@ -490,7 +490,7 @@ class Modmail(commands.Cog):
         """
         mention = self.parse_user_or_role(ctx, user_or_role)
         if mention is None:
-            raise commands.BadArgument(f"{user_or_role} is not a valid user or role.")
+            raise commands.BadArgument(f"{user_or_role} no es un usuario o rol válido.")
 
         thread = ctx.thread
 
@@ -502,14 +502,14 @@ class Modmail(commands.Cog):
         if mention in mentions:
             embed = discord.Embed(
                 color=self.bot.error_color,
-                description=f"{mention} is already subscribed to this thread.",
+                description=f"{mention} ya está subscripto a este ticket.",
             )
         else:
             mentions.append(mention)
             await self.bot.config.update()
             embed = discord.Embed(
                 color=self.bot.main_color,
-                description=f"{mention} will now be notified of all messages received.",
+                description=f"{mention} ahora será notificado de todos los mensajes recibidos.",
             )
         return await ctx.send(embed=embed)
 
@@ -540,14 +540,14 @@ class Modmail(commands.Cog):
         if mention not in mentions:
             embed = discord.Embed(
                 color=self.bot.error_color,
-                description=f"{mention} is not already subscribed to this thread.",
+                description=f"{mention} no está subscripto a este ticket.",
             )
         else:
             mentions.remove(mention)
             await self.bot.config.update()
             embed = discord.Embed(
                 color=self.bot.main_color,
-                description=f"{mention} is now unsubscribed from this thread.",
+                description=f"{mention} ahora está desubscripto de este ticket.",
             )
         return await ctx.send(embed=embed)
 
@@ -580,7 +580,7 @@ class Modmail(commands.Cog):
     def format_log_embeds(self, logs, avatar_url):
         embeds = []
         logs = tuple(logs)
-        title = f"Total Results Found ({len(logs)})"
+        title = f"Resultados encontrados totales ({len(logs)})"
 
         for entry in logs:
             created_at = parser.parse(entry["created_at"])
@@ -596,27 +596,27 @@ class Modmail(commands.Cog):
             embed = discord.Embed(color=self.bot.main_color, timestamp=created_at)
             embed.set_author(name=f"{title} - {username}", icon_url=avatar_url, url=log_url)
             embed.url = log_url
-            embed.add_field(name="Created", value=duration(created_at, now=datetime.utcnow()))
+            embed.add_field(name="Creado", value=duration(created_at, now=datetime.utcnow()))
             closer = entry.get("closer")
             if closer is None:
-                closer_msg = "Unknown"
+                closer_msg = "Desconocido"
             else:
                 closer_msg = f"<@{closer['id']}>"
-            embed.add_field(name="Closed By", value=closer_msg)
+            embed.add_field(name="Cerrado por", value=closer_msg)
 
             if entry["recipient"]["id"] != entry["creator"]["id"]:
-                embed.add_field(name="Created by", value=f"<@{entry['creator']['id']}>")
+                embed.add_field(name="Creado por", value=f"<@{entry['creator']['id']}>")
 
-            embed.add_field(name="Preview", value=format_preview(entry["messages"]), inline=False)
+            embed.add_field(name="Previsualización", value=format_preview(entry["messages"]), inline=False)
 
             if closer is not None:
                 # BUG: Currently, logviewer can't display logs without a closer.
-                embed.add_field(name="Link", value=log_url)
+                embed.add_field(name="Enlace", value=log_url)
             else:
-                logger.debug("Invalid log entry: no closer.")
-                embed.add_field(name="Log Key", value=f"`{entry['key']}`")
+                logger.debug("Entrada de Registro inválida: No hay cerrador.")
+                embed.add_field(name="Clave del Registro", value=f"`{entry['key']}`")
 
-            embed.set_footer(text="Recipient ID: " + str(entry["recipient"]["id"]))
+            embed.set_footer(text="ID del receptor: " + str(entry["recipient"]["id"]))
             embeds.append(embed)
         return embeds
 
@@ -647,7 +647,7 @@ class Modmail(commands.Cog):
         if not any(not log["open"] for log in logs):
             embed = discord.Embed(
                 color=self.bot.error_color,
-                description="This user does not have any previous logs.",
+                description="Este usuario no tiene Registros previos.",
             )
             return await ctx.send(embed=embed)
 
@@ -680,7 +680,7 @@ class Modmail(commands.Cog):
         if not embeds:
             embed = discord.Embed(
                 color=self.bot.error_color,
-                description="No log entries have been found for that query.",
+                description="No se encontraron entradas en el Registro para esta búsqueda.",
             )
             return await ctx.send(embed=embed)
 
@@ -700,13 +700,13 @@ class Modmail(commands.Cog):
         if not success:
             embed = discord.Embed(
                 title="Error",
-                description=f"Log entry `{key}` not found.",
+                description=f"Entrada de Registro `{key}` no encontrada.",
                 color=self.bot.error_color,
             )
         else:
             embed = discord.Embed(
-                title="Success",
-                description=f"Log entry `{key}` successfully deleted.",
+                title="Eliminación correcta",
+                description=f"Entrada de Registro `{key}` eliminada correctamente.",
                 color=self.bot.main_color,
             )
 
@@ -730,7 +730,7 @@ class Modmail(commands.Cog):
         if not embeds:
             embed = discord.Embed(
                 color=self.bot.error_color,
-                description=f"{getattr(user, 'mention', user.id)} has not responded to any threads.",
+                description=f"{getattr(user, 'mention', user.id)} no respondió en ningún ticket.",
             )
             return await ctx.send(embed=embed)
 
@@ -763,7 +763,7 @@ class Modmail(commands.Cog):
         if not embeds:
             embed = discord.Embed(
                 color=self.bot.error_color,
-                description="No log entries have been found for that query.",
+                description="No se encontraron entradas en el Registro para esta búsqueda.",
             )
             return await ctx.send(embed=embed)
 
@@ -856,8 +856,8 @@ class Modmail(commands.Cog):
         except ValueError:
             return await ctx.send(
                 embed=discord.Embed(
-                    title="Failed",
-                    description="Cannot find a message to edit.",
+                    title="Fallo",
+                    description="No se encontró un mensaje para editar.",
                     color=self.bot.error_color,
                 )
             )
@@ -886,7 +886,7 @@ class Modmail(commands.Cog):
 
         if user.bot:
             embed = discord.Embed(
-                color=self.bot.error_color, description="Cannot start a thread with a bot."
+                color=self.bot.error_color, description="No se puede iniciar un ticket con un BOT."
             )
             return await ctx.send(embed=embed)
 
@@ -902,11 +902,11 @@ class Modmail(commands.Cog):
         else:
             thread = await self.bot.threads.create(user, creator=ctx.author, category=category)
             if self.bot.config["dm_disabled"] >= 1:
-                logger.info("Contacting user %s when Modmail DM is disabled.", user)
+                logger.info("Contactando al usuario %s cuando los MDs de contacto del Sistema están deshabilitados.", user)
 
             embed = discord.Embed(
-                title="Created Thread",
-                description=f"Thread started by {ctx.author.mention} for {user.mention}.",
+                title="Ticket creado",
+                description=f"Ticket iniciado por {ctx.author.mention} para {user.mention}.",
                 color=self.bot.main_color,
             )
             await thread.wait_until_ready()
@@ -922,7 +922,7 @@ class Modmail(commands.Cog):
     async def blocked(self, ctx):
         """Retrieve a list of blocked users."""
 
-        embeds = [discord.Embed(title="Blocked Users", color=self.bot.main_color, description="")]
+        embeds = [discord.Embed(title="Usuarios bloqueados", color=self.bot.main_color, description="")]
 
         users = []
 
@@ -941,10 +941,10 @@ class Modmail(commands.Cog):
             embed = embeds[0]
 
             for mention, reason in users:
-                line = mention + f" - {reason or 'No Reason Provided'}\n"
+                line = mention + f" - {reason or 'No se proporcionó una razón'}\n"
                 if len(embed.description) + len(line) > 2048:
                     embed = discord.Embed(
-                        title="Blocked Users (Continued)",
+                        title="Usuarios bloqueados (continuación)",
                         color=self.bot.main_color,
                         description=line,
                     )
@@ -952,7 +952,7 @@ class Modmail(commands.Cog):
                 else:
                     embed.description += line
         else:
-            embeds[0].description = "Currently there are no blocked users."
+            embeds[0].description = "No hay usuarios bloqueados actualmente."
 
         session = EmbedPaginatorSession(ctx, *embeds)
         await session.run()
@@ -978,8 +978,8 @@ class Modmail(commands.Cog):
 
         if str(user.id) in self.bot.blocked_whitelisted_users:
             embed = discord.Embed(
-                title="Success",
-                description=f"{mention} is no longer whitelisted.",
+                title="Éxito",
+                description=f"{mention} ya no está en la Lista Blanca.",
                 color=self.bot.main_color,
             )
             self.bot.blocked_whitelisted_users.remove(str(user.id))
@@ -998,16 +998,16 @@ class Modmail(commands.Cog):
             # Show an extended message stating the original internal message
             reason = msg[16:].strip().rstrip(".")
             embed = discord.Embed(
-                title="Success",
-                description=f"{mention} was previously blocked internally for "
-                f'"{reason}". {mention} is now whitelisted.',
+                title="Éxito",
+                description=f"{mention} fue previamente bloqueado internamente por "
+                f'"{reason}". {mention} ahora está en la Lista Blanca.',
                 color=self.bot.main_color,
             )
         else:
             embed = discord.Embed(
-                title="Success",
+                title="Éxito",
                 color=self.bot.main_color,
-                description=f"{mention} is now whitelisted.",
+                description=f"{mention} ahora está en la Lista Blanca.",
             )
 
         return await ctx.send(embed=embed)
@@ -1034,14 +1034,14 @@ class Modmail(commands.Cog):
             elif after is None:
                 raise commands.MissingRequiredArgument(SimpleNamespace(name="user"))
             else:
-                raise commands.BadArgument(f'User "{after.arg}" not found.')
+                raise commands.BadArgument(f'Usuario "{after.arg}" no encontrado.')
 
         mention = getattr(user, "mention", f"`{user.id}`")
 
         if str(user.id) in self.bot.blocked_whitelisted_users:
             embed = discord.Embed(
                 title="Error",
-                description=f"Cannot block {mention}, user is whitelisted.",
+                description=f"No se puede bloquear a {mention}, el usuario está en la Lista Blanca.",
                 color=self.bot.error_color,
             )
             return await ctx.send(embed=embed)
@@ -1050,11 +1050,11 @@ class Modmail(commands.Cog):
 
         if after is not None:
             if "%" in reason:
-                raise commands.BadArgument('The reason contains illegal character "%".')
+                raise commands.BadArgument('La razón contiene el caracter ilegal "%".')
             if after.arg:
-                reason += f" for `{after.arg}`"
+                reason += f" por `{after.arg}`"
             if after.dt > after.now:
-                reason += f" until {after.dt.isoformat()}"
+                reason += f" durante {after.dt.isoformat()}"
 
         reason += "."
 
@@ -1065,16 +1065,16 @@ class Modmail(commands.Cog):
         if str(user.id) in self.bot.blocked_users and msg:
             old_reason = msg.strip().rstrip(".")
             embed = discord.Embed(
-                title="Success",
-                description=f"{mention} was previously blocked {old_reason}.\n"
-                f"{mention} is now blocked {reason}",
+                title="Éxito",
+                description=f"{mention} fue bloqueado por {old_reason}.\n"
+                f"{mention} ahora está bloqueado por {reason}",
                 color=self.bot.main_color,
             )
         else:
             embed = discord.Embed(
-                title="Success",
+                title="Éxito",
                 color=self.bot.main_color,
-                description=f"{mention} is now blocked {reason}",
+                description=f"{mention} ahora está bloqueado por {reason}",
             )
         self.bot.blocked_users[str(user.id)] = reason
         await self.bot.config.update()
@@ -1110,23 +1110,23 @@ class Modmail(commands.Cog):
             if msg.startswith("System Message: "):
                 # If the user is blocked internally (for example: below minimum account age)
                 # Show an extended message stating the original internal message
-                reason = msg[16:].strip().rstrip(".") or "no reason"
+                reason = msg[16:].strip().rstrip(".") or "sin razón"
                 embed = discord.Embed(
-                    title="Success",
-                    description=f"{mention} was previously blocked internally {reason}.\n"
-                    f"{mention} is no longer blocked.",
+                    title="Éxito",
+                    description=f"{mention} fue bloqueado internamente por {reason}.\n"
+                    f"{mention} ahora no está bloqueado.",
                     color=self.bot.main_color,
                 )
                 embed.set_footer(
-                    text="However, if the original system block reason still applies, "
-                    f"{name} will be automatically blocked again. "
-                    f'Use "{self.bot.prefix}blocked whitelist {user.id}" to whitelist the user.'
+                    text="Sin embargo, si la razón del bloqueo original del Sistema reason still applies, "
+                    f"{name} será bloqueado nuevamente de manera automática. "
+                    f'Ejecuta "{self.bot.prefix}blocked whitelist {user.id}" para añadir al usuario a la Lista Blanca.'
                 )
             else:
                 embed = discord.Embed(
-                    title="Success",
+                    title="Éxito",
                     color=self.bot.main_color,
-                    description=f"{mention} is no longer blocked.",
+                    description=f"{mention} ya no está bloqueado.",
                 )
         else:
             embed = discord.Embed(
