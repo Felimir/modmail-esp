@@ -1130,7 +1130,7 @@ class Modmail(commands.Cog):
                 )
         else:
             embed = discord.Embed(
-                title="Error", description=f"{mention} is not blocked.", color=self.bot.error_color
+                title="Error", description=f"{mention} no está bloqueado actualmente.", color=self.bot.error_color
             )
 
         return await ctx.send(embed=embed)
@@ -1155,8 +1155,8 @@ class Modmail(commands.Cog):
             logger.warning("Failed to delete message: %s.", e)
             return await ctx.send(
                 embed=discord.Embed(
-                    title="Failed",
-                    description="Cannot find a message to delete.",
+                    title="Fallo",
+                    description="No se pudo encontrar un mensaje para eliminar.",
                     color=self.bot.error_color,
                 )
             )
