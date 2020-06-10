@@ -1176,7 +1176,7 @@ class Modmail(commands.Cog):
             user_id = match_user_id(ctx.channel.topic)
             if user_id == -1:
                 logger.info("Setting current channel's topic to User ID.")
-                await ctx.channel.edit(topic=f"User ID: {ctx.thread.id}")
+                await ctx.channel.edit(topic=f"ID del usuario: {ctx.thread.id}")
             return await self.bot.add_reaction(ctx.message, sent_emoji)
 
         logger.info("Attempting to fix a broken thread %s.", ctx.channel.name)
@@ -1188,7 +1188,7 @@ class Modmail(commands.Cog):
         )
         if thread is not None:
             logger.debug("Found thread with tempered ID.")
-            await ctx.channel.edit(reason="Fix broken Modmail thread", topic=f"User ID: {user_id}")
+            await ctx.channel.edit(reason="Arreglando ticket roto del Sistema de Soporte", topic=f"ID del usuario: {user_id}")
             return await self.bot.add_reaction(ctx.message, sent_emoji)
 
         # find genesis message to retrieve User ID
@@ -1216,7 +1216,7 @@ class Modmail(commands.Cog):
                         "Setting current channel's topic to User ID and created new thread."
                     )
                     await ctx.channel.edit(
-                        reason="Fix broken Modmail thread", topic=f"User ID: {user_id}"
+                        reason="Arreglando ticket roto del Sistema de Soporte", topic=f"IS del usuario: {user_id}"
                     )
                     return await self.bot.add_reaction(ctx.message, sent_emoji)
 
@@ -1244,13 +1244,13 @@ class Modmail(commands.Cog):
                     thread = self.bot.threads.cache[user.id]
                     if thread.channel:
                         embed = discord.Embed(
-                            title="Delete Channel",
-                            description="This thread channel is no longer in use. "
-                            f"All messages will be directed to {ctx.channel.mention} instead.",
+                            title="Eliminación del canal",
+                            description="Este canal de ticket ya no está en uso. "
+                            f"Todos los mensajes serán redireccionados a {ctx.channel.mention}.",
                             color=self.bot.error_color,
                         )
                         embed.set_footer(
-                            text='Please manually delete this channel, do not use "{prefix}close".'
+                            text='Por favor, elimina manualmente este canal, no uses "{prefix}close".'
                         )
                         try:
                             await thread.channel.send(embed=embed)
@@ -1267,7 +1267,7 @@ class Modmail(commands.Cog):
                 thread.ready = True
                 logger.info("Setting current channel's topic to User ID and created new thread.")
                 await ctx.channel.edit(
-                    reason="Fix broken Modmail thread", name=name, topic=f"User ID: {user.id}"
+                    reason="Arreglando ticket roto del Sistema de Soporte", name=name, topic=f"ID del usuario: {user.id}"
                 )
                 return await self.bot.add_reaction(ctx.message, sent_emoji)
 
@@ -1284,8 +1284,8 @@ class Modmail(commands.Cog):
         Undo's the `{prefix}disable` command, all DM will be relayed after running this command.
         """
         embed = discord.Embed(
-            title="Success",
-            description="Modmail will now accept all DM messages.",
+            title="Éxito",
+            description="El Sistema ahora está aceptando todos los mensajes",
             color=self.bot.main_color,
         )
 
@@ -1316,8 +1316,8 @@ class Modmail(commands.Cog):
         No new threads can be created through DM.
         """
         embed = discord.Embed(
-            title="Success",
-            description="Modmail will not create any new threads.",
+            title="Éxito",
+            description="El Sistema ahora no está creando tickets",
             color=self.bot.main_color,
         )
         if self.bot.config["dm_disabled"] < 1:
@@ -1335,8 +1335,8 @@ class Modmail(commands.Cog):
         No new threads can be created through DM nor no further DM messages will be relayed.
         """
         embed = discord.Embed(
-            title="Success",
-            description="Modmail will not accept any DM messages.",
+            title="Éxito",
+            description="El Sistema ahora no está aceptando ningún mensaje.",
             color=self.bot.main_color,
         )
 
@@ -1355,20 +1355,20 @@ class Modmail(commands.Cog):
 
         if self.bot.config["dm_disabled"] == 1:
             embed = discord.Embed(
-                title="New Threads Disabled",
-                description="Modmail is not creating new threads.",
+                title="Nuevos tickets deshabilitados",
+                description="El Sistema no está creando nuevos tickets.",
                 color=self.bot.error_color,
             )
         elif self.bot.config["dm_disabled"] == 2:
             embed = discord.Embed(
-                title="All DM Disabled",
-                description="Modmail is not accepting any DM messages for new and existing threads.",
+                title="Mensajes deshabilitados",
+                description="El Sistema no está aceptando ningún mensaje.",
                 color=self.bot.error_color,
             )
         else:
             embed = discord.Embed(
-                title="Enabled",
-                description="Modmail is accepting all DM messages.",
+                title="Mensajes habilitados",
+                description="El Sistema está aceptando todos los mensajes.",
                 color=self.bot.main_color,
             )
 

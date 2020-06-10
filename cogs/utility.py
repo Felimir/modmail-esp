@@ -58,27 +58,27 @@ class ModmailHelpCommand(commands.HelpCommand):
         embeds = []
         for format_ in formats:
             description = (
-                cog.description or "No description."
+                cog.description or "Sin descripción."
                 if not no_cog
-                else "Miscellaneous commands without a category."
+                else "Comandos misceláneos sin categoría."
             )
             embed = discord.Embed(description=f"*{description}*", color=bot.main_color)
 
-            embed.add_field(name="Commands", value=format_ or "No commands.")
+            embed.add_field(name="Comandos", value=format_ or "Sin comandos.")
 
-            continued = " (Continued)" if embeds else ""
-            name = cog.qualified_name + " - Help" if not no_cog else "Miscellaneous Commands"
+            continued = " (Continuación)" if embeds else ""
+            name = cog.qualified_name + " - Ayuda" if not no_cog else "Comandos misceláneos"
             embed.set_author(name=name + continued, icon_url=bot.user.avatar_url)
 
             embed.set_footer(
-                text=f'Type "{prefix}{self.command_attrs["name"]} command" '
-                "for more info on a specific command."
+                text=f'Ejecuta "{prefix}{self.command_attrs["name"]} command" '
+                "para más información sobre un comando."
             )
             embeds.append(embed)
         return embeds
 
     def process_help_msg(self, help_: str):
-        return help_.format(prefix=self.clean_prefix) if help_ else "No help message."
+        return help_.format(prefix=self.clean_prefix) if help_ else "Sin mensaje de ayuda."
 
     async def send_bot_help(self, mapping):
         embeds = []
@@ -124,7 +124,7 @@ class ModmailHelpCommand(commands.HelpCommand):
     async def send_command_help(self, command):
         topic = await self._get_help_embed(command)
         if topic is not None:
-            topic[0].set_footer(text=f"Permission level: {topic[1]}")
+            topic[0].set_footer(text=f"Nivel de permisos: {topic[1]}")
             await self.get_destination().send(embed=topic[0])
 
     async def send_group_help(self, group):
@@ -132,7 +132,7 @@ class ModmailHelpCommand(commands.HelpCommand):
         if topic is None:
             return
         embed = topic[0]
-        embed.add_field(name="Permission Level", value=topic[1], inline=False)
+        embed.add_field(name="Nivel de permisos ", value=topic[1], inline=False)
 
         format_ = ""
         length = len(group.commands)
@@ -148,10 +148,10 @@ class ModmailHelpCommand(commands.HelpCommand):
                 branch = "├─"
             format_ += f"`{branch} {command.name}` - {command.short_doc}\n"
 
-        embed.add_field(name="Sub Command(s)", value=format_[:1024], inline=False)
+        embed.add_field(name="Subcomando(s)", value=format_[:1024], inline=False)
         embed.set_footer(
-            text=f'Type "{self.clean_prefix}{self.command_attrs["name"]} command" '
-            "for more info on a command."
+            text=f'Ejecuta "{self.clean_prefix}{self.command_attrs["name"]} command" '
+            "para más información sobre un comando."
         )
 
         await self.get_destination().send(embed=embed)
@@ -161,9 +161,9 @@ class ModmailHelpCommand(commands.HelpCommand):
         val = self.context.bot.snippets.get(command)
         if val is not None:
             embed = discord.Embed(
-                title=f"{command} is a snippet.", color=self.context.bot.main_color
+                title=f"{command} es un mensaje predefinido.", color=self.context.bot.main_color
             )
-            embed.add_field(name=f"`{command}` will send:", value=val)
+            embed.add_field(name=f"`{command}` envía:", value=val)
             return await self.get_destination().send(embed=embed)
 
         val = self.context.bot.aliases.get(command)
@@ -174,8 +174,8 @@ class ModmailHelpCommand(commands.HelpCommand):
                 embed = discord.Embed(
                     title="Error",
                     color=self.context.bot.error_color,
-                    description=f"Alias `{command}` is invalid, this alias will now be deleted."
-                    "This alias will now be deleted.",
+                    description=f"El alias `{command}` es inválido. "
+                    "Este alias será eliminado.",
                 )
                 embed.add_field(name=f"{command}` used to be:", value=val)
                 self.context.bot.aliases.pop(command)
@@ -183,28 +183,28 @@ class ModmailHelpCommand(commands.HelpCommand):
             else:
                 if len(values) == 1:
                     embed = discord.Embed(
-                        title=f"{command} is an alias.", color=self.context.bot.main_color
+                        title=f"{command} es un alias.", color=self.context.bot.main_color
                     )
-                    embed.add_field(name=f"`{command}` points to:", value=values[0])
+                    embed.add_field(name=f"`{command}` refiere a:", value=values[0])
                 else:
                     embed = discord.Embed(
-                        title=f"{command} is an alias.",
+                        title=f"{command} es un alias.",
                         color=self.context.bot.main_color,
-                        description=f"**`{command}` points to the following steps:**",
+                        description=f"**`{command}` refiere a los siguientes pasos:**",
                     )
                     for i, val in enumerate(values, start=1):
-                        embed.add_field(name=f"Step {i}:", value=val)
+                        embed.add_field(name=f"Paso {i}:", value=val)
 
             embed.set_footer(
-                text=f'Type "{self.clean_prefix}{self.command_attrs["name"]} alias" '
-                "for more details on aliases."
+                text=f'Ejecuta "{self.clean_prefix}{self.command_attrs["name"]} alias" '
+                "para más información en los alias"
             )
             return await self.get_destination().send(embed=embed)
 
         logger.warning("CommandNotFound: %s", error)
 
         embed = discord.Embed(color=self.context.bot.error_color)
-        embed.set_footer(text=f'Command/Category "{command}" not found.')
+        embed.set_footer(text=f'Comando / categoría "{command}" no encontrada.')
 
         choices = set()
 
@@ -214,9 +214,9 @@ class ModmailHelpCommand(commands.HelpCommand):
 
         closest = get_close_matches(command, choices)
         if closest:
-            embed.add_field(name="Perhaps you meant:", value="\n".join(f"`{x}`" for x in closest))
+            embed.add_field(name="Quizás quisiste decir:", value="\n".join(f"`{x}`" for x in closest))
         else:
-            embed.title = "Cannot find command or category"
+            embed.title = "No se pudo encontrar un comando o una categoría"
             embed.set_footer(
                 text=f'Type "{self.clean_prefix}{self.command_attrs["name"]}" '
                 "for a list of all available commands."
