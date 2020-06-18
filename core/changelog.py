@@ -94,7 +94,7 @@ class Version:
 
         for name, value in self.fields.items():
             embed.add_field(name=name, value=truncate(value, 1024))
-        embed.set_footer(text=f"Versión actual: v{self.bot.version}")
+        embed.set_footer(text=f"Versión actual: ^{self.bot.version}")
         embed.set_thumbnail(url=self.bot.user.avatar_url)
         return embed
 
