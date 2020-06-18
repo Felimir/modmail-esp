@@ -719,8 +719,8 @@ class ModmailBot(commands.Bot):
             if delta:
                 await message.channel.send(
                     embed=discord.Embed(
-                        title="Message not sent!",
-                        description=f"You must wait for {delta} before you can contact me again.",
+                        title="Mensaje no enviado!",
+                        description=f"Debes esperar {delta} antes de contactarme nuevamente.",
                         color=self.error_color,
                     )
                 )
@@ -1052,7 +1052,7 @@ class ModmailBot(commands.Bot):
         thread = await self.threads.find(recipient=member)
         if thread:
             embed = discord.Embed(
-                description="The recipient has left the server.", color=self.error_color
+                description="El receptor salió del servidor.", color=self.error_color
             )
             await thread.channel.send(embed=embed)
 
@@ -1062,7 +1062,7 @@ class ModmailBot(commands.Bot):
         thread = await self.threads.find(recipient=member)
         if thread:
             embed = discord.Embed(
-                description="The recipient has joined the server.", color=self.mod_color
+                description="El receptor entró al servidor.", color=self.mod_color
             )
             await thread.channel.send(embed=embed)
 
@@ -1080,7 +1080,7 @@ class ModmailBot(commands.Bot):
                     logger.warning("Failed to find linked message to delete: %s", e)
                 return
             embed = message.embeds[0]
-            embed.set_footer(text=f"{embed.footer.text} (deleted)", icon_url=embed.footer.icon_url)
+            embed.set_footer(text=f"{embed.footer.text} (eliminado)", icon_url=embed.footer.icon_url)
             await message.edit(embed=embed)
             return
 
@@ -1117,9 +1117,9 @@ class ModmailBot(commands.Bot):
                 await self.add_reaction(after, blocked_emoji)
             else:
                 embed = discord.Embed(
-                    description="Successfully Edited Message", color=self.main_color
+                    description="Mensaje editado correctamente", color=self.main_color
                 )
-                embed.set_footer(text=f"Message ID: {after.id}")
+                embed.set_footer(text=f"ID del mensaje: {after.id}")
                 await after.channel.send(embed=embed)
 
     async def on_error(self, event_method, *args, **kwargs):
