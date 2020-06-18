@@ -218,8 +218,8 @@ class ModmailHelpCommand(commands.HelpCommand):
         else:
             embed.title = "No se pudo encontrar un comando o una categoría"
             embed.set_footer(
-                text=f'Type "{self.clean_prefix}{self.command_attrs["name"]}" '
-                "for a list of all available commands."
+                text=f'Ejecuta "{self.clean_prefix}{self.command_attrs["name"]}" '
+                "para una lista de todos los comandos disponibles."
             )
         await self.get_destination().send(embed=embed)
 
@@ -233,7 +233,7 @@ class Utility(commands.Cog):
         self.bot.help_command = ModmailHelpCommand(
             verify_checks=False,
             command_attrs={
-                "help": "Shows this help message.",
+                "help": "Muestra este mensaje de ayuda.",
                 "checks": [checks.has_permissions_predicate(PermissionLevel.REGULAR)],
             },
         )
@@ -257,7 +257,7 @@ class Utility(commands.Cog):
             return await ctx.send(
                 embed=discord.Embed(
                     color=self.bot.error_color,
-                    description=f"The specified version `{version}` could not be found.",
+                    description=f"La versión especificada `{version}` no fue encontrada.",
                 )
             )
 
@@ -273,7 +273,7 @@ class Utility(commands.Cog):
             finally:
                 logger.warning("Failed to display changelog.", exc_info=True)
                 await ctx.send(
-                    f"View the changelog here: {changelog.latest_version.changelog_url}#v{version[::2]}"
+                    f"Mira el Registro de Cambios aquí: {changelog.latest_version.changelog_url}#v{version[::2]}"
                 )
 
     @commands.command(aliases=["info"])
@@ -283,21 +283,21 @@ class Utility(commands.Cog):
         """Shows information about this bot."""
         embed = discord.Embed(color=self.bot.main_color, timestamp=datetime.utcnow())
         embed.set_author(
-            name="Modmail - About",
+            name="Sistema - Sobre",
             icon_url=self.bot.user.avatar_url,
             url="https://discord.gg/F34cRU8",
         )
         embed.set_thumbnail(url=self.bot.user.avatar_url)
 
-        desc = "This is an open source Discord bot that serves as a means for "
-        desc += "members to easily communicate with server administrators in "
-        desc += "an organised manner."
+        desc = "Este es un BOT de Discord de código abierto que permite a los "
+        desc += "miembros comunicarse con los Administradores del servidor de "
+        desc += "una manera organizada."
         embed.description = desc
 
-        embed.add_field(name="Uptime", value=self.bot.uptime)
-        embed.add_field(name="Latency", value=f"{self.bot.latency * 1000:.2f} ms")
-        embed.add_field(name="Version", value=f"`{self.bot.version}`")
-        embed.add_field(name="Authors", value="`kyb3r`, `Taki`, `fourjr`")
+        embed.add_field(name="Tiempo de actividad", value=self.bot.uptime)
+        embed.add_field(name="Latencia", value=f"{self.bot.latency * 1000:.2f} ms")
+        embed.add_field(name="Versión", value=f"`{self.bot.version}`")
+        embed.add_field(name="Autores", value="`kyb3r`, `Taki`, `fourjr`")
 
         changelog = await Changelog.from_url(self.bot)
         latest = changelog.latest_version
@@ -307,25 +307,25 @@ class Utility(commands.Cog):
                 filter(lambda v: not parse_version(v.version).is_prerelease, changelog.versions)
             )
             footer = (
-                f"You are on the prerelease version • the latest version is v{stable.version}."
+                f"Estás en la versión preliminar • la última versión es: ^{stable.version}."
             )
         elif self.bot.version < parse_version(latest.version):
-            footer = f"A newer version is available v{latest.version}."
+            footer = f"Una nueva versión está disponible: ^{latest.version}."
         else:
-            footer = "You are up to date with the latest version."
+            footer = "El Sistema está con la última versión."
 
         embed.add_field(
-            name="Want Modmail in Your Server?",
-            value="Follow the installation guide on [GitHub](https://github.com/kyb3r/modmail/) "
-            "and join our [Discord server](https://discord.gg/F34cRU8/)!",
+            name="¿Quieres al BOT en tu servidor?",
+            value="Sigue la guía de instalación en [GitHub](https://github.com/kyb3r/modmail/) "
+            "y entra a nuestro [Discord](https://discord.gg/F34cRU8/)!",
             inline=False,
         )
 
         embed.add_field(
-            name="Support the Developers",
-            value="This bot is completely free for everyone. We rely on kind individuals "
-            "like you to support us on [`Patreon`](https://patreon.com/kyber) (perks included) "
-            "to keep this bot free forever!",
+            name="Ayuda a los desarrolladores",
+            value="Este BOT es completamente libre para todos. Confiamos en personas amables "
+            "como usted para apoyarnos en [`Patreon`](https://patreon.com/kyber) (ventajas incluidas) "
+            "para mantener este BOT gratis para siempre!",
             inline=False,
         )
 
@@ -372,10 +372,10 @@ class Utility(commands.Cog):
         if not logs:
             embed = discord.Embed(
                 color=self.bot.main_color,
-                title="Debug Logs:",
-                description="You don't have any logs at the moment.",
+                title="Registros de depuración:",
+                description="No tienes registros hasta el momento.",
             )
-            embed.set_footer(text="Go to Heroku to see your logs.")
+            embed.set_footer(text="Ve a Heroku para revisar los registros.")
             return await ctx.send(embed=embed)
 
         messages = []
@@ -401,7 +401,7 @@ class Utility(commands.Cog):
             messages.append(msg)
 
         embed = discord.Embed(color=self.bot.main_color)
-        embed.set_footer(text="Debug logs - Navigate using the reactions below.")
+        embed.set_footer(text="Registros de depuración - Navega usando las reacciones.")
 
         session = MessagePaginatorSession(ctx, *messages, embed=embed)
         session.current = len(messages) - 1
@@ -433,17 +433,17 @@ class Utility(commands.Cog):
                     logger.error(data["message"])
                     raise
                 embed = discord.Embed(
-                    title="Debug Logs",
+                    title="Registros de depuración",
                     color=self.bot.main_color,
                     description=f"{haste_url}/" + key,
                 )
         except (JSONDecodeError, ClientResponseError, IndexError, KeyError):
             embed = discord.Embed(
-                title="Debug Logs",
+                title="Registros de depuración",
                 color=self.bot.main_color,
-                description="Something's wrong. We're unable to upload your logs to hastebin.",
+                description="Algo está mal. No pude subir tus registros a Hastebin.",
             )
-            embed.set_footer(text="Go to Heroku to see your logs.")
+            embed.set_footer(text="Ve a Heroku para revisar los reigstros.")
         await ctx.send(embed=embed)
 
     @debug.command(name="clear", aliases=["wipe"])
@@ -494,7 +494,7 @@ class Utility(commands.Cog):
             self.bot.config.remove("activity_message")
             await self.bot.config.update()
             await self.set_presence()
-            embed = discord.Embed(title="Activity Removed", color=self.bot.main_color)
+            embed = discord.Embed(title="Actividad eliminada", color=self.bot.main_color)
             return await ctx.send(embed=embed)
 
         if not message:
@@ -513,13 +513,13 @@ class Utility(commands.Cog):
         self.bot.config["activity_message"] = activity.name
         await self.bot.config.update()
 
-        msg = f"Activity set to: {activity.type.name.capitalize()} "
+        msg = f"Actividad establecida a: {activity.type.name.capitalize()} "
         if activity.type == ActivityType.listening:
-            msg += f"to {activity.name}."
+            msg += f"a {activity.name}."
         else:
             msg += f"{activity.name}."
 
-        embed = discord.Embed(title="Activity Changed", description=msg, color=self.bot.main_color)
+        embed = discord.Embed(title="Actividad cambiada", description=msg, color=self.bot.main_color)
         return await ctx.send(embed=embed)
 
     @commands.command()
@@ -541,7 +541,7 @@ class Utility(commands.Cog):
             self.bot.config.remove("status")
             await self.bot.config.update()
             await self.set_presence()
-            embed = discord.Embed(title="Status Removed", color=self.bot.main_color)
+            embed = discord.Embed(title="Estado eliminado", color=self.bot.main_color)
             return await ctx.send(embed=embed)
 
         status_type = status_type.replace(" ", "_")
@@ -555,8 +555,8 @@ class Utility(commands.Cog):
         self.bot.config["status"] = status.value
         await self.bot.config.update()
 
-        msg = f"Status set to: {status.value}."
-        embed = discord.Embed(title="Status Changed", description=msg, color=self.bot.main_color)
+        msg = f"Estado establecido a: {status.value}."
+        embed = discord.Embed(title="Estado cambiado", description=msg, color=self.bot.main_color)
         return await ctx.send(embed=embed)
 
     async def set_presence(self, *, status=None, activity_type=None, activity_message=None):
@@ -573,7 +573,7 @@ class Utility(commands.Cog):
             logger.warning(
                 'No activity message found whilst activity is provided, defaults to "Modmail".'
             )
-            activity_message = "Modmail"
+            activity_message = "Sistema de Soporte"
 
         if activity_type == ActivityType.listening:
             if activity_message.lower().startswith("to "):
@@ -604,16 +604,16 @@ class Utility(commands.Cog):
         activity, status = await self.set_presence()
 
         if activity is not None:
-            msg = f"Activity set to: {activity.type.name.capitalize()} "
+            msg = f"Actividad establecida a: {activity.type.name.capitalize()} "
             if activity.type == ActivityType.listening:
-                msg += f"to {activity.name}."
+                msg += f"a {activity.name}."
             else:
                 msg += f"{activity.name}."
             logger.info(msg)
         else:
             logger.info("No activity has been set.")
         if status is not None:
-            msg = f"Status set to: {status.value}."
+            msg = f"Estado establecido a: {status.value}."
             logger.info(msg)
         else:
             logger.info("No status has been set.")
@@ -627,7 +627,7 @@ class Utility(commands.Cog):
     async def ping(self, ctx):
         """Pong! Returns your websocket latency."""
         embed = discord.Embed(
-            title="Pong! Websocket Latency:",
+            title="Pong! Latencia de la WebSocket:",
             description=f"{self.bot.ws.latency * 1000:.4f} ms",
             color=self.bot.main_color,
         )
@@ -646,12 +646,12 @@ class Utility(commands.Cog):
 
         if mention is None:
             embed = discord.Embed(
-                title="Current mention:", color=self.bot.main_color, description=str(current)
+                title="Mención actual:", color=self.bot.main_color, description=str(current)
             )
         else:
             embed = discord.Embed(
-                title="Changed mention!",
-                description=f'On thread creation the bot now says "{mention}".',
+                title="Mención cambiada!",
+                description=f'En nuevos tickets el Sistema dirá "{mention}".',
                 color=self.bot.main_color,
             )
             self.bot.config["mention"] = mention
@@ -676,8 +676,8 @@ class Utility(commands.Cog):
         if prefix is None:
             await ctx.send(embed=embed)
         else:
-            embed.title = "Changed prefix!"
-            embed.description = f"Set prefix to `{prefix}`"
+            embed.title = "Prefijo cambiado!"
+            embed.description = f"Prefijo establecido a `{prefix}`"
             self.bot.config["prefix"] = prefix
             await self.bot.config.update()
             await ctx.send(embed=embed)
@@ -712,7 +712,7 @@ class Utility(commands.Cog):
                 f"`{name}`" for name in takewhile(lambda x: x is not None, names)
             )
             embed = discord.Embed(
-                title="Available configuration keys:",
+                title="Claves de configuración disponibles:",
                 color=self.bot.main_color,
                 description=description,
             )
@@ -733,18 +733,18 @@ class Utility(commands.Cog):
                 self.bot.config.set(key, value)
                 await self.bot.config.update()
                 embed = discord.Embed(
-                    title="Success",
+                    title="Éxito",
                     color=self.bot.main_color,
-                    description=f"Set `{key}` to `{self.bot.config[key]}`.",
+                    description=f"Clave `{key}` establecida a `{self.bot.config[key]}`.",
                 )
             except InvalidConfigError as exc:
                 embed = exc.embed
         else:
             embed = discord.Embed(
-                title="Error", color=self.bot.error_color, description=f"{key} is an invalid key."
+                title="Error", color=self.bot.error_color, description=f"{key} es una clave inválida."
             )
             valid_keys = [f"`{k}`" for k in sorted(keys)]
-            embed.add_field(name="Valid keys", value=", ".join(valid_keys))
+            embed.add_field(name="Claves válidas", value=", ".join(valid_keys))
 
         return await ctx.send(embed=embed)
 
@@ -757,16 +757,16 @@ class Utility(commands.Cog):
             self.bot.config.remove(key)
             await self.bot.config.update()
             embed = discord.Embed(
-                title="Success",
+                title="Éxito",
                 color=self.bot.main_color,
-                description=f"`{key}` had been reset to default.",
+                description=f"`{key}` fue establecida al valor por defecto.",
             )
         else:
             embed = discord.Embed(
-                title="Error", color=self.bot.error_color, description=f"{key} is an invalid key."
+                title="Error", color=self.bot.error_color, description=f"{key} es una clave inválida."
             )
             valid_keys = [f"`{k}`" for k in sorted(keys)]
-            embed.add_field(name="Valid keys", value=", ".join(valid_keys))
+            embed.add_field(name="Claves válidas", value=", ".join(valid_keys))
 
         return await ctx.send(embed=embed)
 
@@ -782,26 +782,26 @@ class Utility(commands.Cog):
 
         if key:
             if key in keys:
-                desc = f"`{key}` is set to `{self.bot.config[key]}`"
+                desc = f"`{key}` está establecida a `{self.bot.config[key]}`"
                 embed = discord.Embed(color=self.bot.main_color, description=desc)
-                embed.set_author(name="Config variable", icon_url=self.bot.user.avatar_url)
+                embed.set_author(name="Variables de configuración", icon_url=self.bot.user.avatar_url)
 
             else:
                 embed = discord.Embed(
                     title="Error",
                     color=self.bot.error_color,
-                    description=f"`{key}` is an invalid key.",
+                    description=f"`{key}` es una clave inválida.",
                 )
                 embed.set_footer(
-                    text=f'Type "{self.bot.prefix}config options" for a list of config variables.'
+                    text=f'Ejecuta "{self.bot.prefix}config options" para una lista de variables de configuración.'
                 )
 
         else:
             embed = discord.Embed(
                 color=self.bot.main_color,
-                description="Here is a list of currently set configuration variable(s).",
+                description="Aquí hay una lista de variable(s) de configuración.",
             )
-            embed.set_author(name="Current config(s):", icon_url=self.bot.user.avatar_url)
+            embed.set_author(name="Configuración(es) actual(es):", icon_url=self.bot.user.avatar_url)
             config = self.bot.config.filter_default(self.bot.config)
 
             for name, value in config.items():
@@ -825,11 +825,11 @@ class Utility(commands.Cog):
             embed = discord.Embed(
                 title="Error",
                 color=self.bot.error_color,
-                description=f"`{key}` is an invalid key.",
+                description=f"`{key}` es una clave inválida.",
             )
             if closest:
                 embed.add_field(
-                    name=f"Perhaps you meant:", value="\n".join(f"`{x}`" for x in closest)
+                    name=f"Quizás quisiste decir:", value="\n".join(f"`{x}`" for x in closest)
                 )
             return await ctx.send(embed=embed)
 
@@ -839,7 +839,7 @@ class Utility(commands.Cog):
             embed = discord.Embed(
                 title="Error",
                 color=self.bot.error_color,
-                description=f"No help details found for `{key}`.",
+                description=f"No se encontró ayuda para `{key}`.",
             )
             return await ctx.send(embed=embed)
 
@@ -852,21 +852,21 @@ class Utility(commands.Cog):
             if current_key == key:
                 index = i
             embed = discord.Embed(
-                title=f"Configuration description on {current_key}:", color=self.bot.main_color
+                title=f"Descripción de configuración en {current_key}:", color=self.bot.main_color
             )
-            embed.add_field(name="Default:", value=fmt(info["default"]), inline=False)
-            embed.add_field(name="Information:", value=fmt(info["description"]), inline=False)
+            embed.add_field(name="Por defecto:", value=fmt(info["default"]), inline=False)
+            embed.add_field(name="Información:", value=fmt(info["description"]), inline=False)
             if info["examples"]:
                 example_text = ""
                 for example in info["examples"]:
                     example_text += f"- {fmt(example)}\n"
-                embed.add_field(name="Example(s):", value=example_text, inline=False)
+                embed.add_field(name="Ejemplo(s):", value=example_text, inline=False)
 
             note_text = ""
             for note in info["notes"]:
                 note_text += f"- {fmt(note)}\n"
             if note_text:
-                embed.add_field(name="Note(s):", value=note_text, inline=False)
+                embed.add_field(name="Nota(s):", value=note_text, inline=False)
 
             if info.get("image") is not None:
                 embed.set_image(url=fmt(info["image"]))
@@ -913,10 +913,10 @@ class Utility(commands.Cog):
                 embed = discord.Embed(
                     title="Error",
                     color=self.bot.error_color,
-                    description=f"Alias `{name}` is invalid, this alias will now be deleted."
-                    "This alias will now be deleted.",
+                    description=f"El alias `{name}` es inválido. "
+                    "Este alias será eliminado.",
                 )
-                embed.add_field(name=f"{name}` used to be:", value=utils.truncate(val, 1024))
+                embed.add_field(name=f"{name}` solía:", value=utils.truncate(val, 1024))
                 self.bot.aliases.pop(name)
                 await self.bot.config.update()
                 return await ctx.send(embed=embed)
@@ -932,7 +932,7 @@ class Utility(commands.Cog):
                 for i, val in enumerate(values, start=1):
                     embed = discord.Embed(
                         color=self.bot.main_color,
-                        title=f'Alias - "{name}" - Step {i}:',
+                        title=f'Alias - "{name}" - Paso {i}:',
                         description=val,
                     )
                     embeds += [embed]
@@ -941,10 +941,10 @@ class Utility(commands.Cog):
 
         if not self.bot.aliases:
             embed = discord.Embed(
-                color=self.bot.error_color, description="You dont have any aliases at the moment."
+                color=self.bot.error_color, description="No tienes alias por el momento."
             )
-            embed.set_footer(text=f'Do "{self.bot.prefix}help alias" for more commands.')
-            embed.set_author(name="Aliases", icon_url=ctx.guild.icon_url)
+            embed.set_footer(text=f'Ejecuta "{self.bot.prefix}help alias" para más comandos.')
+            embed.set_author(name="Alias", icon_url=ctx.guild.icon_url)
             return await ctx.send(embed=embed)
 
         embeds = []
@@ -952,7 +952,7 @@ class Utility(commands.Cog):
         for i, names in enumerate(zip_longest(*(iter(sorted(self.bot.aliases)),) * 15)):
             description = utils.format_description(i, names)
             embed = discord.Embed(color=self.bot.main_color, description=description)
-            embed.set_author(name="Command Aliases", icon_url=ctx.guild.icon_url)
+            embed.set_author(name="Alias de comandos", icon_url=ctx.guild.icon_url)
             embeds.append(embed)
 
         session = EmbedPaginatorSession(ctx, *embeds)
@@ -971,7 +971,7 @@ class Utility(commands.Cog):
 
         val = utils.truncate(utils.escape_code_block(val), 2048 - 7)
         embed = discord.Embed(
-            title=f'Raw alias - "{name}":', description=f"```\n{val}```", color=self.bot.main_color
+            title=f'Alias (crudo) - "{name}":', description=f"```\n{val}```", color=self.bot.main_color
         )
 
         return await ctx.send(embed=embed)
@@ -982,14 +982,14 @@ class Utility(commands.Cog):
             embed = discord.Embed(
                 title="Error",
                 color=self.bot.error_color,
-                description="Invalid multi-step alias, try wrapping each steps in quotes.",
+                description="Alias multipasos inválido, intenta envolver cada paso entre comillas.",
             )
-            embed.set_footer(text=f'See "{self.bot.prefix}alias add" for more details.')
+            embed.set_footer(text=f'Ejecuta "{self.bot.prefix}alias add" para más detalles.')
             return embed
 
         if len(values) > 25:
             embed = discord.Embed(
-                title="Error", description="Too many steps, max=25.", color=self.bot.error_color
+                title="Error", description="Demasiados pasos, máximo 25.", color=self.bot.error_color
             )
             return embed
 
@@ -1000,9 +1000,9 @@ class Utility(commands.Cog):
         embed = discord.Embed(title=f"{action} alias", color=self.bot.main_color)
 
         if not multiple_alias:
-            embed.add_field(name=f"`{name}` points to:", value=utils.truncate(values[0], 1024))
+            embed.add_field(name=f"`{name}` refiere a:", value=utils.truncate(values[0], 1024))
         else:
-            embed.description = f"`{name}` now points to the following steps:"
+            embed.description = f"`{name}` ahora refiere a los siguientes pasos:"
 
         for i, val in enumerate(values, start=1):
             view = StringView(val)
@@ -1018,20 +1018,20 @@ class Utility(commands.Cog):
 
                     if multiple_alias:
                         embed.description = (
-                            "The command you are attempting to point "
-                            f"to does not exist: `{linked_command}`."
+                            "El comando al que intentas referir "
+                            f"no existe: `{linked_command}`."
                         )
                     else:
                         embed.description = (
-                            "The command you are attempting to point "
-                            f"to on step {i} does not exist: `{linked_command}`."
+                            "El comando al que intentas referir "
+                            f"en el paso {i} no existe: `{linked_command}`."
                         )
 
                     return embed
             else:
                 save_aliases.append(val)
             if multiple_alias:
-                embed.add_field(name=f"Step {i}:", value=utils.truncate(val, 1024))
+                embed.add_field(name=f"Paso {i}:", value=utils.truncate(val, 1024))
 
         self.bot.aliases[name] = " && ".join(f'"{a}"' for a in save_aliases)
         await self.bot.config.update()
@@ -1058,32 +1058,32 @@ class Utility(commands.Cog):
             embed = discord.Embed(
                 title="Error",
                 color=self.bot.error_color,
-                description=f"A command with the same name already exists: `{name}`.",
+                description=f"Un comando con el mismo nombre existe: `{name}`.",
             )
 
         elif name in self.bot.aliases:
             embed = discord.Embed(
                 title="Error",
                 color=self.bot.error_color,
-                description=f"Another alias with the same name already exists: `{name}`.",
+                description=f"Otro alias con el mismo nombre existe: `{name}`.",
             )
 
         elif name in self.bot.snippets:
             embed = discord.Embed(
                 title="Error",
                 color=self.bot.error_color,
-                description=f"A snippet with the same name already exists: `{name}`.",
+                description=f"Un mensaje predefinido con el mismo nombre existe: `{name}`.",
             )
 
         elif len(name) > 120:
             embed = discord.Embed(
                 title="Error",
                 color=self.bot.error_color,
-                description="Alias names cannot be longer than 120 characters.",
+                description="Los nombres de los alias no pueden superar los 120 caracteres.",
             )
 
         if embed is None:
-            embed = await self.make_alias(name, value, "Added")
+            embed = await self.make_alias(name, value, "Añadido")
         return await ctx.send(embed=embed)
 
     @alias.command(name="remove", aliases=["del", "delete"])
@@ -1096,9 +1096,9 @@ class Utility(commands.Cog):
             await self.bot.config.update()
 
             embed = discord.Embed(
-                title="Removed alias",
+                title="Alias eliminado",
                 color=self.bot.main_color,
-                description=f"Successfully deleted `{name}`.",
+                description=f"Alias `{name}` eliminado correctamente.",
             )
         else:
             embed = utils.create_not_found_embed(name, self.bot.aliases.keys(), "Alias")
@@ -1115,7 +1115,7 @@ class Utility(commands.Cog):
             embed = utils.create_not_found_embed(name, self.bot.aliases.keys(), "Alias")
             return await ctx.send(embed=embed)
 
-        embed = await self.make_alias(name, value, "Edited")
+        embed = await self.make_alias(name, value, "Editado")
         return await ctx.send(embed=embed)
 
     @commands.group(aliases=["perms"], invoke_without_command=True)
@@ -1153,7 +1153,7 @@ class Utility(commands.Cog):
             return -1
         if hasattr(user_or_role, "id"):
             return user_or_role.id
-        raise commands.BadArgument(f'User or Role "{user_or_role}" not found')
+        raise commands.BadArgument(f'Usuario o rol "{user_or_role}" no encontrado')
 
     @staticmethod
     def _parse_level(name):
@@ -1195,7 +1195,7 @@ class Utility(commands.Cog):
             embed = discord.Embed(
                 title="Error",
                 color=self.bot.error_color,
-                description=f"The referenced command does not exist: `{command_name}`.",
+                description=f"El comando referenciado no existe: `{command_name}`.",
             )
             return await ctx.send(embed=embed)
 
@@ -1204,7 +1204,7 @@ class Utility(commands.Cog):
             embed = discord.Embed(
                 title="Error",
                 color=self.bot.error_color,
-                description=f"The referenced level does not exist: `{level_name}`.",
+                description=f"El nivel referenciado no existe: `{level_name}`.",
             )
         else:
             logger.info(
@@ -1216,10 +1216,10 @@ class Utility(commands.Cog):
 
             await self.bot.config.update()
             embed = discord.Embed(
-                title="Success",
+                title="Éxito",
                 color=self.bot.main_color,
-                description="Successfully set command permission level for "
-                f"`{command.qualified_name}` to `{level.name}`.",
+                description="Permisos del comando "
+                f"`{command.qualified_name}` establecidos a `{level.name}` correctamente.",
             )
         return await ctx.send(embed=embed)
 
@@ -1264,7 +1264,7 @@ class Utility(commands.Cog):
             embed = discord.Embed(
                 title="Error",
                 color=self.bot.error_color,
-                description=f"The referenced {type_} does not exist: `{name}`.",
+                description=f"El tipo referenciado {type_} no existe: `{name}`.",
             )
             return await ctx.send(embed=embed)
 
@@ -1287,9 +1287,9 @@ class Utility(commands.Cog):
                     await self.bot.main_category.set_permissions(key, read_messages=True)
 
         embed = discord.Embed(
-            title="Success",
+            title="Éxito",
             color=self.bot.main_color,
-            description=f"Permission for `{name}` was successfully updated.",
+            description=f"Permisos para `{name}` actualizados correctamente.",
         )
         return await ctx.send(embed=embed)
 
@@ -1340,8 +1340,8 @@ class Utility(commands.Cog):
                 embed = discord.Embed(
                     title="Error",
                     color=self.bot.error_color,
-                    description=f"The command permission level was never overridden: `{name}`, "
-                    f"current permission level is {perm.name}.",
+                    description=f"El nivel de permisos de comando nunca fue anulado: `{name}`, "
+                    f"el nivel de permiso actual es: {perm.name}.",
                 )
             else:
                 logger.info("Restored command permission level for `%s`.", name)
@@ -1349,9 +1349,9 @@ class Utility(commands.Cog):
                 await self.bot.config.update()
                 perm = self.bot.command_perm(name)
                 embed = discord.Embed(
-                    title="Success",
+                    title="Éxito",
                     color=self.bot.main_color,
-                    description=f"Command permission level for `{name}` was successfully restored to {perm.name}.",
+                    description=f"Nivel de permisos de comando para `{name}` se restauró con éxito a {perm.name}.",
                 )
             return await ctx.send(embed=embed)
 
@@ -1365,7 +1365,7 @@ class Utility(commands.Cog):
                 embed = discord.Embed(
                     title="Error",
                     color=self.bot.error_color,
-                    description=f"The referenced level does not exist: `{name}`.",
+                    description=f"El nivel referenciado no existe: `{name}`.",
                 )
                 return await ctx.send(embed=embed)
             name = level.name
@@ -1390,9 +1390,9 @@ class Utility(commands.Cog):
                         await self.bot.main_category.set_permissions(member, overwrite=None)
 
         embed = discord.Embed(
-            title="Success",
+            title="Éxito",
             color=self.bot.main_color,
-            description=f"Permission for `{name}` was successfully updated.",
+            description=f"Los permisos para `{name}` fueron actualizados correctamente.",
         )
         return await ctx.send(embed=embed)
 
@@ -1403,8 +1403,8 @@ class Utility(commands.Cog):
             permissions = self.bot.config["level_permissions"].get(name, [])
         if not permissions:
             embed = discord.Embed(
-                title=f"Permission entries for {type_} `{name}`:",
-                description="No permission entries found.",
+                title=f"Entradas de permisos para {type_} `{name}`:",
+                description="No se encontraron entradas de permisos",
                 color=self.bot.main_color,
             )
         else:
@@ -1428,7 +1428,7 @@ class Utility(commands.Cog):
                     values.append(str(perm))
 
             embed = discord.Embed(
-                title=f"Permission entries for {type_} `{name}`:",
+                title=f"Entradas de permisos para {type_} `{name}`:",
                 description=", ".join(values),
                 color=self.bot.main_color,
             )
@@ -1491,22 +1491,22 @@ class Utility(commands.Cog):
             desc_cmd = (
                 ", ".join(map(lambda x: f"`{x}`", cmds))
                 if cmds
-                else "No permission entries found."
+                else "Sin entradas de permisos."
             )
             desc_level = (
                 ", ".join(map(lambda x: f"`{x}`", levels))
                 if levels
-                else "No permission entries found."
+                else "Sin entradas de permisos."
             )
 
             embeds = [
                 discord.Embed(
-                    title=f"{mention} has permission with the following commands:",
+                    title=f"{mention} tiene permisos para los siguientes comandos:",
                     description=desc_cmd,
                     color=self.bot.main_color,
                 ),
                 discord.Embed(
-                    title=f"{mention} has permission with the following permission levels:",
+                    title=f"{mention} tiene permisos para los siguientes niveles de permisos",
                     description=desc_level,
                     color=self.bot.main_color,
                 ),
@@ -1531,8 +1531,8 @@ class Utility(commands.Cog):
                     if not overrides:
                         embeds.append(
                             discord.Embed(
-                                title="Permission Overrides",
-                                description="You don't have any command level overrides at the moment.",
+                                title="Anulaciones de permisos",
+                                description="No tienes anulaciones de permisos por el momento.",
                                 color=self.bot.error_color,
                             )
                         )
@@ -1546,7 +1546,7 @@ class Utility(commands.Cog):
                                 color=self.bot.main_color, description=description
                             )
                             embed.set_author(
-                                name="Permission Overrides", icon_url=ctx.guild.icon_url
+                                name="Anulaciones de permisos", icon_url=ctx.guild.icon_url
                             )
                             embeds.append(embed)
 
@@ -1561,14 +1561,14 @@ class Utility(commands.Cog):
                     embed = discord.Embed(
                         title="Error",
                         color=self.bot.error_color,
-                        description=f"The command permission level was never overridden: `{name}`, "
-                        f"current permission level is {perm.name}.",
+                        description=f"El nivel de permisos de comando nunca fue anulado: `{name}`, "
+                        f"el nivel de permisos actual es {perm.name}.",
                     )
                 else:
                     embed = discord.Embed(
-                        title="Success",
+                        title="Éxito",
                         color=self.bot.main_color,
-                        description=f'Permission override for command "{name}" is "{perm.name}".',
+                        description=f'La anulación de permisos para "{name}" es "{perm.name}".',
                     )
 
                 return await ctx.send(embed=embed)
@@ -1591,7 +1591,7 @@ class Utility(commands.Cog):
                     embed = discord.Embed(
                         title="Error",
                         color=self.bot.error_color,
-                        description=f"The referenced {user_or_role} does not exist: `{name}`.",
+                        description=f"El referenciado usuario o rol {user_or_role} no existe: `{name}`.",
                     )
                     return await ctx.send(embed=embed)
 
@@ -1644,13 +1644,13 @@ class Utility(commands.Cog):
         await self.bot.config.update()
 
         embed = discord.Embed(color=self.bot.main_color)
-        embed.title = "Success"
+        embed.title = "Éxito"
 
         if not hasattr(target, "mention"):
             target = self.bot.get_user(target.id) or self.bot.modmail_guild.get_role(target.id)
 
         embed.description = (
-            f"{'Un-w' if removed else 'W'}hitelisted {target.mention} to view logs."
+            f"{'Quitado de la Lista Blanca' if removed else 'Añadido a la Lista Blanca'} a {target.mention} para ver los registros."
         )
 
         await ctx.send(embed=embed)
@@ -1673,10 +1673,10 @@ class Utility(commands.Cog):
                 roles.append(role)
 
         embed = discord.Embed(color=self.bot.main_color)
-        embed.title = "Oauth Whitelist"
+        embed.title = "Lista Blanca de OAuth"
 
-        embed.add_field(name="Users", value=" ".join(u.mention for u in users) or "None")
-        embed.add_field(name="Roles", value=" ".join(r.mention for r in roles) or "None")
+        embed.add_field(name="Usuarios", value=" ".join(u.mention for u in users) or "Ninguno")
+        embed.add_field(name="Roles", value=" ".join(r.mention for r in roles) or "Ninguno")
 
         await ctx.send(embed=embed)
 
